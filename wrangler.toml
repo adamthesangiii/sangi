@@ -2,9 +2,7 @@ name = "zemkop-nakladky"
 compatibility_date = "2026-11-01"
 pages_build_output_dir = "public"
 
-# D1 databázu pripojte v Cloudflare: Pages projekt → Settings → Bindings → D1 database,
-# názov premennej: DB. (Alebo doplňte database_id nižšie a odkomentujte.)
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "zemkop-nakladky"
-# database_id = "DOPLNIT"
+[[d1_databases]]
+binding = "DB"
+database_name = "zemkop-nakladky"
+database_id = "916ea221-9dc9-43ba-bea0-058f7cdf92b1"

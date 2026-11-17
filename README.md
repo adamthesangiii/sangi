@@ -12,7 +12,7 @@ kto nakladal, kedy, aké bloky a koľko kusov, súčty v kusoch aj tonách.
 1. Cloudflare → **Storage & Databases → D1** → Create database `zemkop-nakladky`.
 2. Cloudflare → **Workers & Pages → Create → Pages → Connect to Git** → vyberte tento repozitár.
    - Framework preset: *None*, Build command: prázdne, Build output directory: `public`.
-3. V Pages projekte → **Settings → Bindings → Add → D1 database**: Variable name `DB`, databáza `zemkop-nakladky`.
+3. Väzba na databázu (`DB`) je v súbore `wrangler.toml` – pri novej databáze tam zmeňte `database_id`.
 4. **Settings → Variables and Secrets → Add**: `APP_PIN` (typ Secret) = PIN, ktorým sa prihlasujú pracovníci.
 5. **Deployments → Retry deployment** (aby sa väzby prejavili). Hotovo – aplikácia beží na `https://<projekt>.pages.dev`.
 
