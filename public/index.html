@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1c2230">
-<title>Zákazky a nakládky – Redi-Rock & ZEMKOP</title>
-<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-192.png">
+<title>Zemkop</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="apple-mobile-web-app-title" content="Zemkop">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -19,7 +21,8 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 Inter,sys
 button,input,select,textarea{font:inherit;color:inherit}
 header{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);padding:calc(10px + var(--st)) 14px 10px}
 .hrow{display:flex;align-items:center;gap:10px;max-width:900px;margin:0 auto}
-.title{font-weight:700;font-size:16px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title{font-weight:800;font-size:18px;letter-spacing:.02em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px}
+.hlogo{height:26px;width:auto;flex:none}
 .seg{display:flex;background:var(--soft);border-radius:10px;padding:3px;gap:2px}
 .seg button{flex:1;border:0;background:transparent;padding:7px 10px;border-radius:8px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
 .seg button.on{background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.1);color:var(--ink)}
@@ -111,7 +114,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 </head>
 <body>
 <header><div class="hrow">
-  <div class="title" id="hTitle">Zákazky a nakládky</div>
+  <div class="title" id="hTitle"><img src="/logo-mark.png" alt="" class="hlogo">Zemkop</div>
   <div class="seg" id="coSeg"><button data-co="redirock" class="rr">Redi-Rock</button><button data-co="zemkop" class="zk">ZEMKOP blok</button></div>
 </div></header>
 <main><div class="banner" id="banner"></div><div id="view"><div class="empty">Načítavam…</div></div></main>
@@ -517,7 +520,7 @@ db={ collection(col){ return {
   onSnapshot(next){ (listeners[col]=listeners[col]||[]).push(rows=>next({docs:rows.map(r=>{ const {id,...x}=r; return {id,data:()=>x}; }),size:rows.length,metadata:{fromCache:false}})); return ()=>{}; }
 }; } };
 function askPin(wrong){
-  const m=openModal(`<h2>Prihlásenie</h2><p class="small muted" style="margin-top:0">Zadajte PIN aplikácie. Zapamätá sa v tomto telefóne.</p>
+  const m=openModal(`<img src="/logo.png" alt="Zemkop blok" style="display:block;width:190px;max-width:70%;margin:6px auto 16px"><h2>Prihlásenie</h2><p class="small muted" style="margin-top:0">Zadajte PIN aplikácie. Zapamätá sa v tomto telefóne.</p>
     <label class="f">PIN<input id="pinI" type="password" inputmode="numeric" autocomplete="current-password"></label>${wrong&&PIN?'<div class="small" style="color:var(--bad);margin:-6px 0 10px">Nesprávny PIN.</div>':''}
     <div class="mfoot"><button class="btn pri" id="pinOk">Pokračovať</button></div>`);
   const go=()=>{ const v=m.querySelector('#pinI').value.trim(); if(!v) return; PIN=v; try{ localStorage.setItem('nk-pin',v); }catch(e){} closeModal(); banner(''); poll(); };

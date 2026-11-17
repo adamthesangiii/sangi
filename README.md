@@ -1,4 +1,4 @@
-# Zákazky a nakládky – Redi-Rock & ZEMKOP
+# Zemkop – zákazky a nakládky (Redi-Rock & ZEMKOP blok)
 
 Mobilná webová aplikácia na zápis nakládok blokov (Redi-Rock a ZEMKOP blok) k zákazkám:
 kto nakladal, kedy, aké bloky a koľko kusov, súčty v kusoch aj tonách.
