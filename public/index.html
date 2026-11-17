@@ -475,7 +475,7 @@ $('#navPlus').onclick=()=>loadSheet();
 render();
 
 function sub(col,key,setter){
-  const timer=setTimeout(()=>{ if(!S.got[key]) banner('Server zatiaľ neodpovedá – skontrolujte pripojenie.'); },10000);
+  const timer=setTimeout(()=>{ if(!S.got[key] && PIN && !$('#modal').classList.contains('on')) banner('Server zatiaľ neodpovedá – skontrolujte pripojenie.'); },10000);
   db.collection(col).onSnapshot(snap=>{
     setter(snap.docs.map(d=>({id:d.id,...d.data()})));
     if(!snap.metadata.fromCache){ S.got[key]=1; clearTimeout(timer); if(S.got.b&&S.got.j&&S.got.l&&S.got.w) banner(''); }
@@ -520,7 +520,7 @@ function askPin(wrong){
   const m=openModal(`<h2>Prihlásenie</h2><p class="small muted" style="margin-top:0">Zadajte PIN aplikácie. Zapamätá sa v tomto telefóne.</p>
     <label class="f">PIN<input id="pinI" type="password" inputmode="numeric" autocomplete="current-password"></label>${wrong&&PIN?'<div class="small" style="color:var(--bad);margin:-6px 0 10px">Nesprávny PIN.</div>':''}
     <div class="mfoot"><button class="btn pri" id="pinOk">Pokračovať</button></div>`);
-  const go=()=>{ const v=m.querySelector('#pinI').value.trim(); if(!v) return; PIN=v; try{ localStorage.setItem('nk-pin',v); }catch(e){} closeModal(); poll(); };
+  const go=()=>{ const v=m.querySelector('#pinI').value.trim(); if(!v) return; PIN=v; try{ localStorage.setItem('nk-pin',v); }catch(e){} closeModal(); banner(''); poll(); };
   m.querySelector('#pinOk').onclick=go; m.querySelector('#pinI').onkeydown=e=>{ if(e.key==='Enter') go(); };
   setTimeout(()=>m.querySelector('#pinI').focus(),50);
 }
