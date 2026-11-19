@@ -59,8 +59,8 @@ nav.bottom .plus span.c{width:50px;height:50px;border-radius:50%;background:var(
 .list .it:last-child{border-bottom:0}
 input,select,textarea{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel);width:100%;font-size:16px}
 textarea{min-height:64px;resize:vertical}
-label.f{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:12px}
-label.f>*{margin-top:5px}
+label.f,div.f{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:12px}
+label.f>*,div.f>*{margin-top:5px}
 .empty{text-align:center;color:var(--muted);padding:30px 10px}
 .toolbar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -385,8 +385,8 @@ function loadSheet(l, presetJob){
   let jobSel = l?l.jobId:(presetJob || (()=>{ try{ return localStorage.getItem('nk-lastjob-'+S.co)||''; }catch(e){ return ''; } })());
   if(!jobs.some(j=>j.id===jobSel)) jobSel = jobs.filter(j=>j.status!=='done').length===1 ? jobs.find(j=>j.status!=='done').id : '';
   const body=`
-    <label class="f">Zákazka<div class="row"><select id="lJob"><option value="">— vyberte zákazku —</option>${jobs.map(j=>`<option value="${esc(j.id)}" ${j.id===jobSel?'selected':''}>${esc(j.name)}${j.customer?' – '+esc(j.customer):''}</option>`).join('')}</select><button type="button" class="btn sm" id="lNewJob" style="white-space:nowrap">+ Nová</button></div></label>
-    <label class="f">Kto nakladal<div class="chips" id="lWorkers"></div></label>
+    <div class="f">Zákazka<div class="row"><select id="lJob"><option value="">— vyberte zákazku —</option>${jobs.map(j=>`<option value="${esc(j.id)}" ${j.id===jobSel?'selected':''}>${esc(j.name)}${j.customer?' – '+esc(j.customer):''}</option>`).join('')}</select><button type="button" class="btn sm" id="lNewJob" style="white-space:nowrap">+ Nová</button></div></div>
+    <div class="f">Kto nakladal<div class="chips" id="lWorkers"></div></div>
     <div class="row" style="gap:10px"><label class="f" style="flex:1">Dátum a čas<input type="datetime-local" id="lAt" value="${localDT(l?l.at:Date.now())}"></label>
     <label class="f" style="flex:1">ŠPZ / vodič<input id="lPlate" value="${esc(l?l.plate||'':'')}" placeholder="nepovinné"></label></div>
     <label class="f">Poznámka<input id="lNote" value="${esc(l?l.note||'':'')}" placeholder="napr. dodací list č., miesto vykládky"></label>
@@ -394,7 +394,7 @@ function loadSheet(l, presetJob){
     ${!isNew?'<button class="btn danger block" id="lDel" style="margin-top:18px">Zmazať nakládku</button>':''}`;
   const s=openSheet(isNew?'Nová nakládka – '+COL[S.co]:'Upraviť nakládku',body,`<div class="sum" id="lSum"></div><button class="btn pri" id="lSave">Uložiť</button>`);
   const upd=()=>{ const items=Object.entries(qty).map(([code,q])=>({code,qty:q})); s.querySelector('#lSum').innerHTML=`<b>${piecesOf(items)} ks</b> · ${tons(weightOf(items))}<div class="muted">${items.length} druhov blokov</div>`; };
-  const drawW=()=>{ const ws=S.workers.filter(w=>w.active!==false).map(w=>w.name); [...loaders].forEach(n=>{ if(!ws.includes(n)) ws.push(n); });
+  const drawW=()=>{ const ws=[...new Set(S.workers.filter(w=>w.active!==false).map(w=>w.name))]; [...loaders].forEach(n=>{ if(!ws.includes(n)) ws.push(n); });
     s.querySelector('#lWorkers').innerHTML=ws.map(n=>`<button type="button" class="chip ${loaders.has(n)?'on':''}" data-w="${esc(n)}">${esc(n)}</button>`).join('')+`<button type="button" class="chip" id="addW">+ Pridať meno</button>`;
     s.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{ const n=b.dataset.w; loaders.has(n)?loaders.delete(n):loaders.add(n); drawW(); });
     s.querySelector('#addW').onclick=()=>{ const m=openModal(`<h2>Nový pracovník</h2><label class="f">Meno<input id="wN" autofocus></label><div class="mfoot"><button class="btn" id="wC">Zrušiť</button><button class="btn pri" id="wS">Pridať</button></div>`);
