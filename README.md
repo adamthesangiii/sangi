@@ -23,3 +23,8 @@ Tabuľka v D1 sa vytvorí sama pri prvej požiadavke.
 echo 'APP_PIN=1234' > .dev.vars
 npx wrangler pages dev public --d1 DB
 ```
+
+## Oprávnenia
+- **Majiteľ**: všetky zákazky, nakládky, plány, mesačný odber (podľa blokov a podľa zákaziek), katalóg blokov.
+- **Zamestnanec**: zapíše nakládku, založí novú zákazku, pridá meno pracovníka; opraví/zmaže len nakládky do 24 h. Server mu neposiela plány, poznámky, ukončené zákazky ani staršie nakládky.
+- Po 10 nesprávnych PIN-och z jednej IP adresy sa prihlasovanie na 15 minút zablokuje.

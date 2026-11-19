@@ -110,21 +110,36 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:14px}
 .kv div:nth-child(odd){color:var(--muted)}
 .ro .w{display:none!important}
+body:not(.owner) .own{display:none!important}
+body:not(.worker) .wk{display:none!important}
+.iconbtn{border:1px solid var(--line);background:var(--panel);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;color:var(--muted)}
+.iconbtn svg{width:18px;height:18px}
+.monhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.monhead h3{flex:1;margin:0;text-align:center;text-transform:capitalize}
+.ybar{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;align-items:end;height:90px;margin:6px 0 2px}
+.ybar button{border:0;background:var(--soft);border-radius:4px 4px 0 0;cursor:pointer;padding:0;min-height:3px}
+.ybar button.on{background:var(--co)}
+.ylab{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;font-size:10.5px;color:var(--muted);text-align:center}
+.rolepill{font-size:11px;padding:2px 7px}
+@media(max-width:440px){.tname{display:none}.seg button{padding:7px 9px}}
+body.worker nav.bottom .plus{flex:1}
 </style>
 </head>
 <body>
 <header><div class="hrow">
-  <div class="title" id="hTitle"><img src="/logo-mark.png" alt="" class="hlogo">Zemkop</div>
+  <div class="title" id="hTitle"><img src="/logo-mark.png" alt="" class="hlogo"><span class="tname">Zemkop</span></div>
   <div class="seg" id="coSeg"><button data-co="redirock" class="rr">Redi-Rock</button><button data-co="zemkop" class="zk">ZEMKOP blok</button></div>
+  <button class="iconbtn" id="logoutBtn" title="Odhlásiť"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h4a1 1 0 011 1v14a1 1 0 01-1 1h-4M10 17l5-5-5-5M15 12H3"/></svg></button>
 </div></header>
 <main><div class="banner" id="banner"></div><div id="view"><div class="empty">Načítavam…</div></div></main>
 
 <nav class="bottom" id="nav">
-  <button data-v="prehlad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-8 9 8v8a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Prehľad</button>
-  <button data-v="zakazky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Zákazky</button>
+  <button data-v="prehlad" class="own"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-8 9 8v8a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Prehľad</button>
+  <button data-v="zakazky" class="own"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Zákazky</button>
+  <button data-v="dnes" class="wk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>Moje nakládky</button>
   <button class="plus w" id="navPlus"><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>Nakládka</button>
-  <button data-v="nakladky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>Nakládky</button>
-  <button data-v="katalog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9-5 9 5-9 5z"/><path d="M3 8v8l9 5 9-5V8"/></svg>Bloky</button>
+  <button data-v="nakladky" class="own"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>Nakládky</button>
+  <button data-v="katalog" class="own"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9-5 9 5-9 5z"/><path d="M3 8v8l9 5 9-5V8"/></svg>Bloky</button>
 </nav>
 
 <div class="sheet" id="sheet"></div>
@@ -136,7 +151,7 @@ window.IMG={"zk:A1": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANwAAABbCAAA
 (() => {
 const JOB_ST = {planned:'Pripravuje sa', active:'Prebieha', done:'Ukončená'};
 const TEX = {LED:'Ledgestone', LIM:'Limestone'};
-const S = {co:'redirock', view:'prehlad', blocks:[], jobs:[], loads:[], workers:[], got:{b:0,j:0,l:0,w:0}, canWrite:true, me:null, jf:'open', lq:'', tex:'LED', cq:''};
+const S = {role:null, month:null, co:'redirock', view:'prehlad', blocks:[], jobs:[], loads:[], workers:[], got:{b:0,j:0,l:0,w:0}, canWrite:true, me:null, jf:'open', lq:'', tex:'LED', cq:''};
 try{ const s=JSON.parse(localStorage.getItem('nk-ui')||'{}'); if(s.co) S.co=s.co; if(s.view) S.view=s.view; if(s.tex) S.tex=s.tex; }catch(e){}
 const persist=()=>{ try{ localStorage.setItem('nk-ui',JSON.stringify({co:S.co,view:S.view,tex:S.tex})); }catch(e){} };
 let db=null;
@@ -185,7 +200,9 @@ function render(){
   const v=$('#view');
   if(!db) return;
   if(!(S.got.b&&S.got.j&&S.got.l&&S.got.w)){ v.innerHTML='<div class="empty">Načítavam údaje…</div>'; return; }
-  v.innerHTML = S.view==='zakazky'?vJobs(): S.view==='nakladky'?vLoads(): S.view==='katalog'?vCatalog(): vHome();
+  if(S.role==='worker') S.view='dnes'; else if(S.view==='dnes') S.view='prehlad';
+  document.querySelectorAll('#nav [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===S.view));
+  v.innerHTML = S.role==='worker'?vWorker(): S.view==='zakazky'?vJobs(): S.view==='nakladky'?vLoads(): S.view==='katalog'?vCatalog(): vHome();
   bind(v);
 }
 function jobProgress(j){
@@ -224,10 +241,48 @@ function vHome(){
     <div class="kpi"><div class="l">Rozbehnuté zákazky</div><div class="v">${act.length}</div><div class="s">${coJobs().filter(j=>j.status==='done').length} ukončených</div></div>
   </div>`;
   if(S.canWrite) h+=`<button class="btn pri block" data-a="newLoad" style="margin-bottom:12px">+ Zapísať nakládku</button>`;
+  h+=vMonthReport();
   h+=`<div class="card"><h3>Rozbehnuté zákazky</h3>${act.length?act.slice(0,6).map(jobCard).join(''):`<div class="muted small">Žiadne. ${S.canWrite?'<a href="#" data-a="newJob">Založiť zákazku</a>':''}</div>`}</div>`;
   h+=`<div class="card"><h3>Najviac odoberané bloky tento mesiac</h3>${top.length?`<table>${top.map(([c,q])=>{ const b=blkByCode(c)||{}; return `<tr><td style="width:70px">${blkImg(b)}</td><td><b>${esc(c)}</b><div class="small muted">${esc(b.dims||'')}</div><div class="bar"><i style="width:${q/maxT*100}%"></i></div></td><td class="n"><b>${q}</b> ks<div class="small muted">${tons(q*(b.weight||0))}</div></td></tr>`; }).join('')}</table>`:'<div class="muted small">Tento mesiac zatiaľ nič.</div>'}</div>`;
   h+=`<div class="card"><h3>Posledné nakládky</h3>${loads.length?loads.slice(0,5).map(l=>loadCard(l)).join(''):'<div class="muted small">Zatiaľ žiadne nakládky.</div>'}</div>`;
   return h.replace(/<img /g,'<img style="width:60px;height:40px;object-fit:contain" ');
+}
+const MONTHS=['január','február','marec','apríl','máj','jún','júl','august','september','október','november','december'];
+const curYM=()=>{ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1); };
+function monthLoads(ym){ const [y,m]=ym.split('-').map(Number); const from=new Date(y,m-1,1).getTime(), to=new Date(y,m,1).getTime(); return coLoads().filter(l=>l.at>=from&&l.at<to); }
+function monthData(ym){
+  const ls=monthLoads(ym); const byJob={};
+  ls.forEach(l=>{ const k=l.jobId||'-'; const o=byJob[k]=byJob[k]||{items:{},n:0}; o.n++; (l.items||[]).forEach(i=>{ o.items[i.code]=(o.items[i.code]||0)+(+i.qty||0); }); });
+  const blocks=Object.entries(sumItems(ls)).sort((a,b)=>((blkByCode(a[0])||{}).order||0)-((blkByCode(b[0])||{}).order||0));
+  const kgOf=m=>Object.entries(m).reduce((s,[c,q])=>s+q*((blkByCode(c)||{}).weight||0),0);
+  const jobs=Object.entries(byJob).map(([id,o])=>({id,job:jobById(id)||{name:'Bez zákazky'},items:o.items,n:o.n,pcs:Object.values(o.items).reduce((s,x)=>s+x,0),kg:kgOf(o.items)})).sort((a,b)=>b.kg-a.kg);
+  return {ls,blocks,jobs,pcs:ls.reduce((s,l)=>s+piecesOf(l.items),0),kg:ls.reduce((s,l)=>s+weightOf(l.items),0)};
+}
+function vMonthReport(){
+  const ym=S.month||curYM(); const [y,m]=ym.split('-').map(Number); const d=monthData(ym);
+  const yearKg=MONTHS.map((_,i)=>monthLoads(y+'-'+pad(i+1)).reduce((s,l)=>s+weightOf(l.items),0)); const maxY=Math.max(1,...yearKg);
+  let h=`<div class="card"><div class="monhead"><button class="iconbtn" data-mon="-1">‹</button><h3>Odber – ${MONTHS[m-1]} ${y}</h3><button class="iconbtn" data-mon="1">›</button></div>
+    <div class="ybar">${yearKg.map((kg,i)=>`<button data-ym="${y}-${pad(i+1)}" class="${i+1===m?'on':''}" style="height:${Math.max(3,kg/maxY*100)}%" title="${MONTHS[i]}: ${tons(kg)}"></button>`).join('')}</div>
+    <div class="ylab">${MONTHS.map(n=>`<span>${n.slice(0,3)}</span>`).join('')}</div>
+    <div class="kpis" style="margin-top:12px"><div class="kpi"><div class="l">Odobraté kusy</div><div class="v">${d.pcs} ks</div><div class="s">${d.ls.length} nakládok</div></div>
+      <div class="kpi"><div class="l">Hmotnosť</div><div class="v">${tons(d.kg)}</div><div class="s">${d.jobs.length} zákaziek</div></div></div>`;
+  if(!d.ls.length) return h+'<div class="muted small">V tomto mesiaci nie sú žiadne nakládky.</div></div>';
+  h+=`<div class="ser">Podľa blokov</div><table><tr><th>Blok</th><th class="n">Kusy</th><th class="n">Hmotnosť</th></tr>${d.blocks.map(([c,q])=>{ const b=blkByCode(c)||{}; return `<tr><td><b>${esc(c)}</b><div class="small muted">${esc(b.dims||'')}</div></td><td class="n"><b>${q}</b></td><td class="n">${tons(q*(b.weight||0))}</td></tr>`; }).join('')}</table>
+    <div class="ser">Kam išli bloky</div><table><tr><th>Zákazka</th><th class="n">Kusy</th><th class="n">Hmotnosť</th></tr>${d.jobs.map(o=>`<tr ${o.id!=='-'?`data-job="${esc(o.id)}" style="cursor:pointer"`:''}><td><b>${esc(o.job.name)}</b><div class="small muted">${esc([o.job.customer,o.job.place].filter(Boolean).join(' · '))}</div><div class="small">${Object.entries(o.items).map(([c,q])=>esc(c)+' × '+q).join(', ')}</div></td><td class="n"><b>${o.pcs}</b><div class="small muted">${o.n} nakl.</div></td><td class="n">${tons(o.kg)}</td></tr>`).join('')}</table>
+    <button class="btn sm" data-a="copyMonth" style="margin-top:10px">Kopírovať mesiac do Excelu</button></div>`;
+  return h;
+}
+function vWorker(){
+  const ls=coLoads();
+  return `<button class="btn pri block" data-a="newLoad" style="margin-bottom:12px;padding:16px;font-size:17px">+ Zapísať nakládku</button>
+    <div class="card"><h3>Nakládky za posledných 24 hodín</h3><p class="small muted" style="margin-top:-4px">Ťuknutím ich môžete opraviť alebo zmazať. Staršie nakládky upravuje len majiteľ.</p>
+    ${ls.length?ls.map(l=>loadCard(l)).join(''):'<div class="muted small">Zatiaľ žiadne.</div>'}</div>`;
+}
+async function copyMonth(){
+  const ym=S.month||curYM(); const [y,m]=ym.split('-').map(Number); const d=monthData(ym);
+  const rows=[['Mesiac','Firma','Zákazka','Zákazník','Miesto','Kód bloku','Rozmer','Kusy','Kg']];
+  d.jobs.forEach(o=>Object.entries(o.items).forEach(([c,q])=>{ const b=blkByCode(c)||{}; rows.push([MONTHS[m-1]+' '+y,COL[S.co],o.job.name,o.job.customer||'',o.job.place||'',c,b.dims||'',q,q*(b.weight||0)]); }));
+  try{ await navigator.clipboard.writeText(rows.map(r=>r.map(x=>String(x).replace(/[\t\n]/g,' ')).join('\t')).join('\n')); toast('Skopírované – vložte do Excelu'); }catch(e){ toast('Kopírovanie zlyhalo'); }
 }
 function vJobs(){
   const f=S.jf; let js=coJobs();
@@ -268,6 +323,9 @@ function bind(v){
   v.querySelectorAll('[data-a=newJob]').forEach(e=>e.onclick=ev=>{ev.preventDefault();jobModal();});
   v.querySelectorAll('[data-a=newBlock]').forEach(e=>e.onclick=()=>blockModal());
   v.querySelectorAll('[data-a=copyLoads]').forEach(e=>e.onclick=copyLoads);
+  v.querySelectorAll('[data-a=copyMonth]').forEach(e=>e.onclick=copyMonth);
+  v.querySelectorAll('[data-ym]').forEach(e=>e.onclick=()=>{ S.month=e.dataset.ym; render(); });
+  v.querySelectorAll('[data-mon]').forEach(e=>e.onclick=()=>{ const [y,m]=(S.month||curYM()).split('-').map(Number); const d=new Date(y,m-1+(+e.dataset.mon),1); S.month=d.getFullYear()+'-'+pad(d.getMonth()+1); render(); });
   v.querySelectorAll('[data-jf]').forEach(e=>e.onclick=()=>{S.jf=e.dataset.jf;render();});
   v.querySelectorAll('[data-tex]').forEach(e=>e.onclick=()=>{S.tex=e.dataset.tex;persist();render();});
   ['jq','lq'].forEach(id=>{ const i=v.querySelector('#'+id); if(i) i.oninput=()=>{ S.lq=i.value; const p=i.selectionStart; render(); const n=$('#'+id); n.focus(); n.setSelectionRange(p,p); }; });
@@ -282,7 +340,7 @@ function openSheet(title,body,foot){
 function closeSheet(){ $('#sheet').classList.remove('on'); $('#sheet').innerHTML=''; document.body.style.overflow=''; S.openJob=null; }
 function openModal(html){ $('#mbox').innerHTML=html; $('#modal').classList.add('on'); return $('#mbox'); }
 function closeModal(){ $('#modal').classList.remove('on'); }
-$('#modal').onclick=e=>{ if(e.target.id==='modal' && PIN) closeModal(); };
+$('#modal').onclick=e=>{ if(e.target.id==='modal' && !pinOpen) closeModal(); };
 function confirmBox(msg,yes,fn){ const m=openModal(`<h2>Potvrdenie</h2><p>${esc(msg)}</p><div class="mfoot"><button class="btn" id="cN">Zrušiť</button><button class="btn pri" id="cY">${esc(yes)}</button></div>`); m.querySelector('#cN').onclick=closeModal; m.querySelector('#cY').onclick=async()=>{closeModal();await fn();}; }
 
 /* ---------- block picker ---------- */
@@ -494,7 +552,8 @@ async function api(method,path,body){
   let r;
   try{ r=await fetch('/api/'+path,{method,headers:{'x-app-pin':PIN,'content-type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store'}); }
   catch(e){ throw {code:'unavailable'}; }
-  if(r.status===401){ askPin(true); throw {code:'unauth'}; }
+  if(r.status===401){ askPin('Nesprávny PIN.'); throw {code:'unauth'}; }
+  if(r.status===429){ askPin('Príliš veľa nesprávnych pokusov. Skúste to o 15 minút.'); throw {code:'unauth'}; }
   if(!r.ok){ let m=''; try{ m=(await r.json()).error||''; }catch(e){} throw {code:r.status>=500?'server':'bad',message:m}; }
   return r.json();
 }
@@ -519,19 +578,29 @@ db={ collection(col){ return {
     delete:()=>after(api('DELETE',col+'/'+encodeURIComponent(id))) }; },
   onSnapshot(next){ (listeners[col]=listeners[col]||[]).push(rows=>next({docs:rows.map(r=>{ const {id,...x}=r; return {id,data:()=>x}; }),size:rows.length,metadata:{fromCache:false}})); return ()=>{}; }
 }; } };
-function askPin(wrong){
-  const m=openModal(`<img src="/logo.png" alt="Zemkop blok" style="display:block;width:190px;max-width:70%;margin:6px auto 16px"><h2>Prihlásenie</h2><p class="small muted" style="margin-top:0">Zadajte PIN aplikácie. Zapamätá sa v tomto telefóne.</p>
-    <label class="f">PIN<input id="pinI" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"></label>${wrong&&PIN?'<div class="small" style="color:var(--bad);margin:-6px 0 10px">Nesprávny PIN.</div>':''}
+let pinOpen=false;
+function askPin(err){
+  if(pinOpen){ const e=$('#pinErr'); if(e) e.textContent=err||''; return; }
+  pinOpen=true;
+  const m=openModal(`<img src="/logo.png" alt="Zemkop blok" style="display:block;width:190px;max-width:70%;margin:6px auto 16px"><h2>Prihlásenie</h2><p class="small muted" style="margin-top:0">Majitelia a zamestnanci majú každý svoj PIN. Zapamätá sa v tomto telefóne.</p>
+    <label class="f">PIN<input id="pinI" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"></label><div class="small" id="pinErr" style="color:var(--bad);margin:-6px 0 10px">${esc(PIN&&err?err:'')}</div>
     <div class="mfoot"><button class="btn pri" id="pinOk">Pokračovať</button></div>`);
-  const go=()=>{ const v=m.querySelector('#pinI').value.trim(); if(!v) return; PIN=v; try{ localStorage.setItem('nk-pin',v); }catch(e){} closeModal(); banner(''); poll(); };
+  const go=()=>{ const v=m.querySelector('#pinI').value.trim(); if(!v) return; PIN=v; try{ localStorage.setItem('nk-pin',v); }catch(e){} pinOpen=false; closeModal(); banner(''); start(); };
   m.querySelector('#pinOk').onclick=go; m.querySelector('#pinI').onkeydown=e=>{ if(e.key==='Enter') go(); };
   setTimeout(()=>m.querySelector('#pinI').focus(),50);
 }
+async function start(){
+  try{ const me=await api('GET','me'); S.role=me.role; }
+  catch(e){ if(e.code!=='unauth') banner('Nedá sa spojiť so serverom – skúšam znova…'), setTimeout(start,5000); return; }
+  document.body.classList.toggle('worker',S.role==='worker'); document.body.classList.toggle('owner',S.role==='owner');
+  render(); poll();
+}
+$('#logoutBtn').onclick=()=>confirmBox('Odhlásiť sa z tohto telefónu? Pri ďalšom otvorení bude treba zadať PIN.','Odhlásiť',async()=>{ try{ localStorage.removeItem('nk-pin'); }catch(e){} location.reload(); });
 sub('blocks','b',r=>S.blocks=r);
 sub('jobs','j',r=>S.jobs=r);
 sub('loads','l',r=>S.loads=r.sort((a,b)=>b.at-a.at));
 sub('workers','w',r=>S.workers=r.sort((a,b)=>(a.name||'').localeCompare(b.name||'','sk')));
-if(PIN) poll(); else askPin(false);
+if(PIN) start(); else askPin('');
 })();
 </script>
 </body>
