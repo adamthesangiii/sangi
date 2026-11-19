@@ -582,7 +582,7 @@ let pinOpen=false;
 function askPin(err){
   if(pinOpen){ const e=$('#pinErr'); if(e) e.textContent=err||''; return; }
   pinOpen=true;
-  const m=openModal(`<img src="/logo.png" alt="Zemkop blok" style="display:block;width:190px;max-width:70%;margin:6px auto 16px"><h2>Prihlásenie</h2><p class="small muted" style="margin-top:0">Majitelia a zamestnanci majú každý svoj PIN. Zapamätá sa v tomto telefóne.</p>
+  const m=openModal(`<img src="/logo.png" alt="Zemkop blok" style="display:block;width:190px;max-width:70%;margin:6px auto 16px"><h2>Prihlásenie</h2>
     <label class="f">PIN<input id="pinI" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"></label><div class="small" id="pinErr" style="color:var(--bad);margin:-6px 0 10px">${esc(PIN&&err?err:'')}</div>
     <div class="mfoot"><button class="btn pri" id="pinOk">Pokračovať</button></div>`);
   const go=()=>{ const v=m.querySelector('#pinI').value.trim(); if(!v) return; PIN=v; try{ localStorage.setItem('nk-pin',v); }catch(e){} pinOpen=false; closeModal(); banner(''); start(); };
